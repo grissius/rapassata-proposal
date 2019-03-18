@@ -27,7 +27,8 @@ type UnwrapTomato<T> = T extends Tomato<infer I, true> ? I : T extends Tomato<in
 
 type Values<T, U = UnwrapTomato<T>> = U extends string | number | boolean | undefined
     ? U
-    : U extends undefined | Array<infer I> ? Array<UnwrapTomato<I>> // values?
+    : U extends undefined | Array<infer I>
+    ? Array<UnwrapTomato<I>> // values?
     : { [key in keyof NonNullable<U>]: Values<NonNullable<U>[key]> };
 
 type test = UnwrapTomato<Tomato<string, false>>;
