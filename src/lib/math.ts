@@ -21,16 +21,25 @@ interface Breeds {
     any: Tomato<any>;
 }
 
-const rapassata = <T>(defs: T): ((data: any) => T) => {
-    // process defs (type cast back from the `$` and extract defintitions)
-    return defs => defs;
-};
+const { any, number, arrayOf, boolean, object, objectOf, string } = ('' as any) as Breeds;
 
 type UnwrapTomato<T> = T extends Tomato<infer I, true> ? I : T extends Tomato<infer I, false> ? I | undefined : T;
 
-type Values<T> = T extends string | number | boolean ? UnwrapTomato<T> : { [key in keyof T]: UnwrapTomato<T[key]> };
+type Values<T, U = UnwrapTomato<T>> = U extends string | number | boolean | undefined
+    ? U
+    : U extends undefined | Array<infer I> ? Array<UnwrapTomato<I>> // values?
+    : { [key in keyof NonNullable<U>]: Values<NonNullable<U>[key]> };
 
-const { any, number, arrayOf, boolean, object, objectOf, string } = ('' as any) as Breeds;
+type test = UnwrapTomato<Tomato<string, false>>;
+
+type A = Values<typeof string>;
+
+const b = object({ foo: string });
+type B = Values<typeof b>;
+
+const c = object({ foo: arrayOf(number) });
+// const c = arrayOf(number);
+type C = Values<typeof c>;
 
 const Nest = object({
     age: number.defaultTo(18),
