@@ -1,5 +1,12 @@
+const enum TomatoShape {
+    Atom = 'Atom',
+    Array = 'Array',
+    Object = 'Object',
+    Record = 'Record',
+}
+
 type Result<T, O> = O extends true ? T : T | undefined;
-interface Tomato<T, O extends boolean = false> {
+interface Tomato<T, O extends boolean = false, S = TomatoShape.Atom> {
     type: string; // what type?
     required: boolean; // is required?
     default: T; // default value?
@@ -10,6 +17,17 @@ interface Tomato<T, O extends boolean = false> {
     validate: (fn: (val: T) => boolean | Promise<boolean>) => Tomato<T, O>; // add validation function
     $: Result<T, O>; // finish construction of the attribute, type-cast it to wrong type to ensure correct types
 }
+
+type StringTomato<T = string> = Tomato<T>;
+type NumberTomato<T = number> = Tomato<T>;
+type BooleanTomato<T = boolean> = Tomato<T>;
+type AnyTomato<T = any> = Tomato<T>;
+type ArrayTomato<T extends AnyTomato = AnyTomato> = Tomato<T, false, TomatoShape.Array>;
+type ObjectTomato<T = any> = Tomato<T, false, TomatoShape.Object>;
+type RecordTomato<T extends AnyTomato = AnyTomato> = Tomato<T, false, TomatoShape.Record>;
+
+type UnwrapTomato<T> = T extends Tomato<infer I, true> ? I : T extends Tomato<infer I, false> ? I | undefined : T;
+type UnwrapTomatoShape<T> = T extends Tomato<infer T, infer O, infer S> ? S : T;
 
 interface Breeds {
     string: Tomato<string>;
@@ -23,15 +41,14 @@ interface Breeds {
 
 const { any, number, arrayOf, boolean, object, objectOf, string } = ('' as any) as Breeds;
 
-type UnwrapTomato<T> = T extends Tomato<infer I, true> ? I : T extends Tomato<infer I, false> ? I | undefined : T;
 
-type Values<T, U = UnwrapTomato<T>> = U extends string | number | boolean | undefined
+type Values<T, U = UnwrapTomato<T>, S = UnwrapTomatoShape<T>> = S extends TomatoShape.Atom
     ? U
-    : U extends undefined | Array<infer I>
-    ? Array<UnwrapTomato<I>> // values?
+    : S extends TomatoShape.Array
+    ? Array<UnwrapTomato<U>> // values?
     : { [key in keyof NonNullable<U>]: Values<NonNullable<U>[key]> };
 
-type test = UnwrapTomato<Tomato<string, false>>;
+type test = UnwrapTomato<StringTomato>;
 
 type A = Values<typeof string>;
 
@@ -68,5 +85,3 @@ const Req = {
 };
 
 type X = Values<typeof Req>;
-
-const request = acceptRequest({});
