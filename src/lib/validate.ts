@@ -1,4 +1,4 @@
-import { StringTomato, TomatoShape, AnyShapeTomato } from "./tomatos";
+import { StringTomato, TomatoShape, AnyShapeTomato } from './tomatos';
 
 export const string: StringTomato = (() => {
     let node: StringTomato = {
@@ -6,13 +6,13 @@ export const string: StringTomato = (() => {
         flow: [],
         required: false,
         default: undefined,
-        validate: (x) => ({...node, flow: [ ...node.flow, x ]}),
-        require: () => ({...node, required: true }),
-        defaultTo: (x) => ({...node, default: x }),
+        validate: x => ({ ...node, flow: [...node.flow, x] }),
+        require: () => ({ ...node, required: true }),
+        defaultTo: x => ({ ...node, default: x }),
     };
     node = node.validate(x => typeof x === 'string') as any;
     return node;
-})()
+})();
 
 const runFlow = (flow: any[], value: any) => {
     const res: any[] = [];
@@ -21,12 +21,12 @@ const runFlow = (flow: any[], value: any) => {
         return val;
     }, value);
     return res;
-}
+};
 
 export const validate = (schema: AnyShapeTomato, value: any) => {
     const flowRes = runFlow(schema.flow, value);
     if (schema.shape === TomatoShape.Atom) {
         return flowRes;
-    };
+    }
     return flowRes;
-}
+};

@@ -1,4 +1,4 @@
-import { Values } from "./helpers";
+import { Values } from './helpers';
 
 export const enum TomatoShape {
     Atom = 'Atom',
@@ -39,7 +39,11 @@ interface RecordShapedTomato<T, R extends boolean = false> extends Tomato<T, R, 
     structure: Record<any, T>;
 }
 
-export type AnyShapeTomato<T = any, R extends boolean = any> = AtomShapedTomato<T, R> | ArrayShapedTomato<T, R> | ObjectShapedTomato<T, R> | RecordShapedTomato<T, R>;
+export type AnyShapeTomato<T = any, R extends boolean = any> =
+    | AtomShapedTomato<T, R>
+    | ArrayShapedTomato<T, R>
+    | ObjectShapedTomato<T, R>
+    | RecordShapedTomato<T, R>;
 export type StringTomato<T = string> = AtomShapedTomato<T>;
 type NumberTomato<T = number> = AtomShapedTomato<T>;
 type BooleanTomato<T = boolean> = AtomShapedTomato<T>;
