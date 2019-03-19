@@ -1,11 +1,13 @@
-const enum TomatoShape {
+import { Values } from "./helpers";
+
+export const enum TomatoShape {
     Atom = 'Atom',
     Array = 'Array',
     Object = 'Object',
     Record = 'Record',
 }
 
-interface Tomato<T, R extends boolean = false, S extends TomatoShape = TomatoShape.Atom> {
+export interface Tomato<T, R extends boolean = false, S extends TomatoShape = TomatoShape.Atom> {
     shape: TomatoShape;
     required: boolean;
     default?: Values<T, T, S>;
@@ -37,8 +39,8 @@ interface RecordShapedTomato<T, R extends boolean = false> extends Tomato<T, R, 
     structure: Record<any, T>;
 }
 
-type AnyShapeTomato<T = any, R extends boolean = any> = AtomShapedTomato<T, R> | ArrayShapedTomato<T, R> | ObjectShapedTomato<T, R> | RecordShapedTomato<T, R>;
-type StringTomato<T = string> = AtomShapedTomato<T>;
+export type AnyShapeTomato<T = any, R extends boolean = any> = AtomShapedTomato<T, R> | ArrayShapedTomato<T, R> | ObjectShapedTomato<T, R> | RecordShapedTomato<T, R>;
+export type StringTomato<T = string> = AtomShapedTomato<T>;
 type NumberTomato<T = number> = AtomShapedTomato<T>;
 type BooleanTomato<T = boolean> = AtomShapedTomato<T>;
 type AnyTomato<T = any> = AtomShapedTomato<T>;
