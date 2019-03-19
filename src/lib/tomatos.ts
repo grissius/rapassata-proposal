@@ -6,9 +6,10 @@ const enum TomatoShape {
 }
 
 interface Tomato<T, R extends boolean = false, S extends TomatoShape = TomatoShape.Atom> {
-    type: string; // what type?
-    required: boolean; // is required?
-    default: T; // default value?
+    shape: TomatoShape;
+    required: boolean;
+    default?: Values<T, T, S>;
+    flow: Array<any>;
 
     // modeling methods
     require: () => Tomato<T, true, S>; // make required
@@ -17,22 +18,40 @@ interface Tomato<T, R extends boolean = false, S extends TomatoShape = TomatoSha
 }
 
 // Tomato variances
-type AllTomatos<T = any, R extends boolean = any, S extends TomatoShape = any> = Tomato<T, R, S>;
+interface AtomShapedTomato<T, R extends boolean = false> extends Tomato<T, R, TomatoShape.Atom> {
+    shape: TomatoShape.Atom;
+}
 
-type StringTomato<T = string> = Tomato<T>;
-type NumberTomato<T = number> = Tomato<T>;
-type BooleanTomato<T = boolean> = Tomato<T>;
-type AnyTomato<T = any> = Tomato<T>;
-type ArrayTomato<T extends AllTomatos = AnyTomato> = Tomato<T, false, TomatoShape.Array>;
-type ObjectTomato<T = any> = Tomato<T, false, TomatoShape.Object>;
-type RecordTomato<T extends Record<any, any>> = Tomato<T, false, TomatoShape.Record>;
+interface ArrayShapedTomato<T, R extends boolean = false> extends Tomato<T, R, TomatoShape.Array> {
+    shape: TomatoShape.Array;
+    item: AnyTomato;
+}
+
+interface ObjectShapedTomato<T, R extends boolean = false> extends Tomato<T, R, TomatoShape.Object> {
+    shape: TomatoShape.Object;
+    structure: T;
+}
+
+interface RecordShapedTomato<T, R extends boolean = false> extends Tomato<T, R, TomatoShape.Record> {
+    shape: TomatoShape.Record;
+    structure: Record<any, T>;
+}
+
+type AnyShapeTomato<T = any, R extends boolean = any> = AtomShapedTomato<T, R> | ArrayShapedTomato<T, R> | ObjectShapedTomato<T, R> | RecordShapedTomato<T, R>;
+type StringTomato<T = string> = AtomShapedTomato<T>;
+type NumberTomato<T = number> = AtomShapedTomato<T>;
+type BooleanTomato<T = boolean> = AtomShapedTomato<T>;
+type AnyTomato<T = any> = AtomShapedTomato<T>;
+type ArrayTomato<T extends AnyShapeTomato = any> = ArrayShapedTomato<T, false>;
+type ObjectTomato<T = any> = ObjectShapedTomato<T, false>;
+type RecordTomato<T extends Record<any, any>> = RecordShapedTomato<T, false>;
 
 // Builders
 interface Breeds {
     string: StringTomato;
     number: NumberTomato;
     boolean: Tomato<boolean>;
-    array: <T extends AllTomatos>(x: T) => ArrayTomato<T>;
+    array: <T extends AnyShapeTomato>(x: T) => ArrayTomato<T>;
     objectOf: <V>(val: V) => RecordTomato<Record<any, V>>;
     object: <V>(val: V) => ObjectTomato<V>;
     any: AnyTomato;
