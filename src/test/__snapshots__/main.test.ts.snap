@@ -1,0 +1,370 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Schemas array 1`] = `
+Object {
+  "default": undefined,
+  "defaultTo": [Function],
+  "flow": Array [
+    Object {
+      "message": "Not an array",
+      "type": "Validate",
+      "validate": [Function],
+    },
+  ],
+  "item": Object {
+    "default": undefined,
+    "defaultTo": [Function],
+    "flow": Array [
+      Object {
+        "message": "Not a string",
+        "type": "Validate",
+        "validate": [Function],
+      },
+    ],
+    "require": [Function],
+    "required": false,
+    "shape": "Atom",
+    "validate": [Function],
+  },
+  "require": [Function],
+  "required": false,
+  "shape": "Array",
+  "validate": [Function],
+}
+`;
+
+exports[`Schemas boolean 1`] = `
+Object {
+  "default": undefined,
+  "defaultTo": [Function],
+  "flow": Array [
+    Object {
+      "message": "Not a boolean",
+      "type": "Validate",
+      "validate": [Function],
+    },
+  ],
+  "require": [Function],
+  "required": false,
+  "shape": "Atom",
+  "validate": [Function],
+}
+`;
+
+exports[`Schemas number 1`] = `
+Object {
+  "default": undefined,
+  "defaultTo": [Function],
+  "flow": Array [
+    Object {
+      "message": "Not a number",
+      "type": "Validate",
+      "validate": [Function],
+    },
+  ],
+  "require": [Function],
+  "required": false,
+  "shape": "Atom",
+  "validate": [Function],
+}
+`;
+
+exports[`Schemas object 1`] = `
+Object {
+  "default": undefined,
+  "defaultTo": [Function],
+  "flow": Array [
+    Object {
+      "message": "Not an object",
+      "type": "Validate",
+      "validate": [Function],
+    },
+  ],
+  "require": [Function],
+  "required": false,
+  "shape": "Object",
+  "structure": Object {
+    "default": undefined,
+    "defaultTo": [Function],
+    "flow": Array [
+      Object {
+        "message": "Not a string",
+        "type": "Validate",
+        "validate": [Function],
+      },
+    ],
+    "require": [Function],
+    "required": false,
+    "shape": "Atom",
+    "validate": [Function],
+  },
+  "validate": [Function],
+}
+`;
+
+exports[`Schemas string 1`] = `
+Object {
+  "default": undefined,
+  "defaultTo": [Function],
+  "flow": Array [
+    Object {
+      "message": "Not a string",
+      "type": "Validate",
+      "validate": [Function],
+    },
+  ],
+  "require": [Function],
+  "required": false,
+  "shape": "Atom",
+  "validate": [Function],
+}
+`;
+
+exports[`Validation (composite) Schema 1 undefined 1`] = `
+Object {
+  "errors": Array [
+    Object {
+      "message": "Not an object",
+      "value": undefined,
+    },
+  ],
+  "structure": Object {
+    "user": Object {
+      "errors": Array [
+        Object {
+          "message": "Not an object",
+          "value": undefined,
+        },
+      ],
+      "structure": Object {
+        "address": Object {
+          "errors": Array [
+            Object {
+              "message": "Not an object",
+              "value": undefined,
+            },
+          ],
+          "structure": Object {
+            "number": Object {
+              "errors": Array [
+                Object {
+                  "message": "Not a number",
+                  "value": undefined,
+                },
+              ],
+              "value": undefined,
+            },
+            "street": Object {
+              "errors": Array [],
+              "value": undefined,
+            },
+          },
+          "value": undefined,
+        },
+        "age": Object {
+          "errors": Array [],
+          "value": undefined,
+        },
+        "colors": Object {
+          "children": Array [],
+          "errors": Array [],
+          "value": undefined,
+        },
+      },
+      "value": undefined,
+    },
+  },
+  "value": undefined,
+}
+`;
+
+exports[`Validation (composite) Schema 1 validate OK 1`] = `
+Object {
+  "errors": Array [],
+  "structure": Object {
+    "user": Object {
+      "errors": Array [],
+      "structure": Object {
+        "address": Object {
+          "errors": Array [],
+          "structure": Object {
+            "number": Object {
+              "errors": Array [],
+              "value": 123,
+            },
+            "street": Object {
+              "errors": Array [],
+              "value": "a",
+            },
+          },
+          "value": Object {
+            "number": 123,
+            "street": "a",
+          },
+        },
+        "age": Object {
+          "errors": Array [],
+          "value": 12,
+        },
+        "colors": Object {
+          "children": Array [
+            Object {
+              "errors": Array [],
+              "value": "red",
+            },
+          ],
+          "errors": Array [],
+          "value": Array [
+            "red",
+          ],
+        },
+      },
+      "value": Object {
+        "address": Object {
+          "number": 123,
+          "street": "a",
+        },
+        "age": 12,
+        "colors": Array [
+          "red",
+        ],
+      },
+    },
+  },
+  "value": Object {
+    "user": Object {
+      "address": Object {
+        "number": 123,
+        "street": "a",
+      },
+      "age": 12,
+      "colors": Array [
+        "red",
+      ],
+    },
+  },
+}
+`;
+
+exports[`Validation (primitives) array validate OK 1`] = `
+Object {
+  "children": Array [
+    Object {
+      "errors": Array [],
+      "value": "bar",
+    },
+  ],
+  "errors": Array [],
+  "value": Array [
+    "bar",
+  ],
+}
+`;
+
+exports[`Validation (primitives) array validate null 1`] = `
+Object {
+  "children": Array [],
+  "errors": Array [
+    Object {
+      "message": "Not an array",
+      "value": null,
+    },
+  ],
+  "value": null,
+}
+`;
+
+exports[`Validation (primitives) boolean validate OK 1`] = `
+Object {
+  "errors": Array [],
+  "value": false,
+}
+`;
+
+exports[`Validation (primitives) boolean validate null 1`] = `
+Object {
+  "errors": Array [
+    Object {
+      "message": "Not a boolean",
+      "value": null,
+    },
+  ],
+  "value": null,
+}
+`;
+
+exports[`Validation (primitives) number validate OK 1`] = `
+Object {
+  "errors": Array [],
+  "value": 42,
+}
+`;
+
+exports[`Validation (primitives) number validate null 1`] = `
+Object {
+  "errors": Array [
+    Object {
+      "message": "Not a number",
+      "value": null,
+    },
+  ],
+  "value": null,
+}
+`;
+
+exports[`Validation (primitives) object validate OK 1`] = `
+Object {
+  "errors": Array [],
+  "structure": Object {
+    "a": Object {
+      "errors": Array [],
+      "value": "x",
+    },
+  },
+  "value": Object {
+    "a": "x",
+  },
+}
+`;
+
+exports[`Validation (primitives) object validate null 1`] = `
+Object {
+  "errors": Array [
+    Object {
+      "message": "Not an object",
+      "value": null,
+    },
+  ],
+  "structure": Object {
+    "a": Object {
+      "errors": Array [
+        Object {
+          "message": "Not a string",
+          "value": undefined,
+        },
+      ],
+      "value": undefined,
+    },
+  },
+  "value": null,
+}
+`;
+
+exports[`Validation (primitives) string validate OK 1`] = `
+Object {
+  "errors": Array [],
+  "value": "foo",
+}
+`;
+
+exports[`Validation (primitives) string validate null 1`] = `
+Object {
+  "errors": Array [
+    Object {
+      "message": "Not a string",
+      "value": null,
+    },
+  ],
+  "value": null,
+}
+`;
