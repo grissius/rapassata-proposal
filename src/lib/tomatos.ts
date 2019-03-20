@@ -16,9 +16,9 @@ export interface Tomato<T, R extends boolean = false, S extends TomatoShape = To
     flow: Array<FlowItem>;
 
     // modeling methods
-    require: () => BakeShape<Tomato<T, true, S>>; // make required
-    defaultTo: (defVal: Values<T, T, S>) => BakeShape<Tomato<T, true, S>>; // set default value
-    validate: (fn: (val: Values<T, T, S>) => boolean | Promise<boolean>, message?: string) => BakeShape<Tomato<T, R, S>>; // add validation function
+    require: () => BakeShape<Tomato<T, true, S>>;
+    defaultTo: (defVal: Values<T, T, S>) => BakeShape<Tomato<T, true, S>>;
+    validate: (fn: (val: Values<T, T, S>) => boolean | Promise<boolean>, message?: string) => BakeShape<Tomato<T, R, S>>;
 }
 
 
@@ -32,7 +32,7 @@ export interface ArrayShapedTomato<T, R extends boolean = false> extends Tomato<
     item: AnyShapeTomato;
 }
 
-interface ObjectShapedTomato<T, R extends boolean = false> extends Tomato<T, R, TomatoShape.Object> {
+export interface ObjectShapedTomato<T, R extends boolean = false> extends Tomato<T, R, TomatoShape.Object> {
     shape: TomatoShape.Object;
     structure: T;
 }
@@ -63,7 +63,7 @@ export type ObjectTomato<T = any> = ObjectShapedTomato<T, false>;
 export type RecordTomato<T extends Record<any, any>> = RecordShapedTomato<T, false>;
 
 // Builders
-interface Breeds {
+export interface Breeds {
     string: StringTomato;
     number: NumberTomato;
     boolean: BooleanTomato;
