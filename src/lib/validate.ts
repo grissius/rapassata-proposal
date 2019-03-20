@@ -88,6 +88,8 @@ export const array = <T extends AnyShapeTomato>(item: T): ArrayTomato<T> => {
     return node.validate(x => Array.isArray(x), 'Not an array');
 };
 
+const isObject = (x: any) => typeof x == 'object' && x && x.constructor == Object
+
 export const object = <T>(structure: T): ObjectTomato<T> => {
     let node: ObjectTomato<T> = {
         structure,
@@ -102,7 +104,7 @@ export const object = <T>(structure: T): ObjectTomato<T> => {
         require: () => ({ ...node, required: true }),
         defaultTo: x => ({ ...node, default: x }),
     };
-    return node.validate(x => typeof x == 'object' && x.constructor == Object, 'Not an object');
+    return node.validate(isObject, 'Not an object');
 };
 
 const runFlow = (flow: FlowItem[], value: any) => {
@@ -132,9 +134,9 @@ export const validate = (schema: AnyShapeTomato, value: any): any => {
             children: (Array.isArray(value) ? value : []).map(v => validate(schema.item, v)),
         };
     } else {
+        value = isObject(value) ? value : {};
         return {
             ...flowRes,
-            // TODO: fix non object
             structure: Object.keys(schema.structure).reduce((res, key) => {
                 res[key] = validate(schema.structure[key], value[key]);
                 return res;
