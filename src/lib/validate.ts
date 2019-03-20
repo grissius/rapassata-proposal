@@ -1,4 +1,4 @@
-import { StringTomato, TomatoShape, AnyShapeTomato, NumberTomato, ArrayTomato, ObjectTomato } from './tomatos';
+import { StringTomato, TomatoShape, AnyShapeTomato, NumberTomato, ArrayTomato, ObjectTomato, BooleanTomato } from './tomatos';
 
 enum FlowType {
     Transform = 'Transform',
@@ -53,6 +53,22 @@ export const number: NumberTomato = (() => {
         defaultTo: x => ({ ...node, default: x }),
     };
     return node.validate(x => typeof x === 'number', 'Not a number');
+})();
+
+export const boolean: BooleanTomato = (() => {
+    let node: BooleanTomato = {
+        shape: TomatoShape.Atom,
+        flow: [],
+        required: false,
+        default: undefined,
+        validate: (validate, message = '') => ({
+            ...node,
+            flow: [...node.flow, { message, validate, type: FlowType.Validate }],
+        }),
+        require: () => ({ ...node, required: true }),
+        defaultTo: x => ({ ...node, default: x }),
+    };
+    return node.validate(x => typeof x === 'boolean', 'Not a boolean');
 })();
 
 export const array = <T extends AnyShapeTomato>(item: T): ArrayTomato<T> => {
