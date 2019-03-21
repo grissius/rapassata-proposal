@@ -11,8 +11,8 @@ type B = Values<typeof b>;
 
 type A = Values<typeof string>;
 
-const c = object({ foo: array(number) });
-// const c = array(number);
+// const c = object({ foo: array(number) });
+const c = array(number);
 type C = Values<typeof c>;
 
 const Nest = object({
@@ -23,7 +23,7 @@ const Nest = object({
             number: string.require(),
         }),
         s: string.defaultTo('red'),
-    }),
+    }).validate(x =>),
 });
 type Y = Values<typeof Nest>;
 
@@ -35,7 +35,7 @@ const Req = {
             street: string,
             number: string.require(),
         },
-        colors: array(string.defaultTo('red')).defaultTo([]),
+        colors: array(string.defaultTo('red')).defaultTo(''),
         ratedHobbies: objectOf(number).require(),
     },
 };

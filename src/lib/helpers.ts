@@ -1,20 +1,31 @@
-import { Tomato, TomatoShape } from './tomatos';
+import { Tomato, TomatoShape, AnyShapeTomato, AtomShapedTomato, ArrayShapedTomato, ObjectShapedTomato, RecordShapedTomato } from './tomatos';
 
-// Helpers
-// Return T or ?T based on the flag
+// T => T | ?T
 type ProcessRequired<T, R> = R extends true ? T : T | undefined;
-// Get value of a single tomato
+
+// Tomato<I, R, S> => I OR ?I based on R
 type UnwrapTomato<T> = T extends Tomato<infer I, infer R, infer S> ? ProcessRequired<I, R> : T;
-// Extract shape
+
+// Tomato<I, R, S> => S
 type UnwrapTomatoShape<T> = T extends Tomato<infer T, infer R, infer S> ? S : T;
-// Extract values from a complete tomato object
-export type Values<T, U = UnwrapTomato<T>, S = UnwrapTomatoShape<T>> = S extends TomatoShape.Atom
+
+// Tomato<I, R, S> => Value (recursive)
+export type TomatoToValues<T, U = UnwrapTomato<T>, S = UnwrapTomatoShape<T>> = S extends TomatoShape.Atom
     ? U
     : S extends TomatoShape.Array
-    ? Array<UnwrapTomato<U>>
-    : { [key in keyof U]: Values<U[key]> };
+    ? Array<UnwrapTomato<UnbakeTomato<U>>>
+    : { [key in keyof U]: TomatoToValues<UnbakeTomato<U[key]>> };
 
-interface ValidationResult<T> {
-    value: T;
-    pass: boolean;
-}
+// (AtomShapedTomato<...X> | ArrayShapedTomato<...X> | ...) => Tomato<...X, S>
+export type UnbakeTomato<T> = T extends AtomShapedTomato<infer U, infer R> ? Tomato<U, R, TomatoShape.Atom>
+ : T extends ArrayShapedTomato<infer U, infer R> ? Tomato<U, R, TomatoShape.Array>
+ : T extends ObjectShapedTomato<infer U, infer R> ? Tomato<U, R, TomatoShape.Object>
+ : T extends RecordShapedTomato<infer U, infer R> ? Tomato<U, R, TomatoShape.Record>
+ : T;
+
+
+// (AtomShapedTomato<...X> | ArrayShapedTomato<...X> | ...) => Value (recursive)
+export type Values<T> = TomatoToValues<UnbakeTomato<T>>
+
+
+export type Values2<T, U, S> = TomatoToValues<UnbakeTomato<T>, U, S>

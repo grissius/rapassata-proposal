@@ -1,4 +1,4 @@
-import { Values } from './helpers';
+import { Values, Values2 } from './helpers';
 import { FlowItem } from './validate';
 
 export const enum TomatoShape {
@@ -8,22 +8,35 @@ export const enum TomatoShape {
     Record = 'Record',
 }
 
-
-export interface Tomato<T, R extends boolean = false, S extends TomatoShape = TomatoShape.Atom> {
+export interface Tomato<
+T,
+R extends boolean = false,
+S extends TomatoShape = TomatoShape.Atom,
+BakedTomato = S extends TomatoShape.Atom ? AtomShapedTomato<T, R>
+: S extends TomatoShape.Array ? ArrayShapedTomato<T, R>
+: S extends TomatoShape.Object ? ObjectShapedTomato<T, R>
+: S extends TomatoShape.Record ? RecordShapedTomato<T, R>
+: T,
+TrueBakedTomato = S extends TomatoShape.Atom ? AtomShapedTomato<T, true>
+: S extends TomatoShape.Array ? ArrayShapedTomato<T, true>
+: S extends TomatoShape.Object ? ObjectShapedTomato<T, true>
+: S extends TomatoShape.Record ? RecordShapedTomato<T, true>
+: T,
+> {
     shape: TomatoShape;
     required: boolean;
-    default?: Values<T, T, S>;
+    default?: Values2<T, T, S>;
     flow: Array<FlowItem>;
 
     // modeling methods
-    require: () => BakeShape<Tomato<T, true, S>>;
-    defaultTo: (defVal: Values<T, T, S>) => BakeShape<Tomato<T, true, S>>;
-    validate: (fn: (val: Values<T, T, S>) => boolean | Promise<boolean>, message?: string) => BakeShape<Tomato<T, R, S>>;
+    require: () => TrueBakedTomato;
+    defaultTo: (defVal: Values2<T, T, S>) => TrueBakedTomato;
+    validate: (fn: (val: Values2<T, T, S>) => boolean | Promise<boolean>, message?: string) => BakedTomato;
 }
 
 
 // Tomato variances
-interface AtomShapedTomato<T, R extends boolean = false> extends Tomato<T, R, TomatoShape.Atom> {
+export interface AtomShapedTomato<T, R extends boolean = false> extends Tomato<T, R, TomatoShape.Atom> {
     shape: TomatoShape.Atom;
 }
 
@@ -37,7 +50,7 @@ export interface ObjectShapedTomato<T, R extends boolean = false> extends Tomato
     structure: T;
 }
 
-interface RecordShapedTomato<T, R extends boolean = false> extends Tomato<T, R, TomatoShape.Record> {
+export interface RecordShapedTomato<T, R extends boolean = false> extends Tomato<T, R, TomatoShape.Record> {
     shape: TomatoShape.Record;
     structure: Record<any, T>;
 }
