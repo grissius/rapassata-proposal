@@ -67,21 +67,17 @@ type BakeShape<T> = T extends Tomato<infer U, infer R, TomatoShape.Atom> ? AtomS
 : T extends Tomato<infer U, infer R, TomatoShape.Record> ? RecordShapedTomato<U, R>
 : T
 
-export type StringTomato<T = string> = AtomShapedTomato<T>;
-export type NumberTomato<T = number> = AtomShapedTomato<T>;
-export type BooleanTomato<T = boolean> = AtomShapedTomato<T>;
-export type AnyTomato<T = any> = AtomShapedTomato<T>;
 export type ArrayTomato<T extends AnyShapeTomato = any> = ArrayShapedTomato<T, false>;
 export type ObjectTomato<T = any> = ObjectShapedTomato<T, false>;
 export type RecordTomato<T extends Record<any, any>> = RecordShapedTomato<T, false>;
 
 // Builders
 export interface Breeds {
-    string: StringTomato;
-    number: NumberTomato;
-    boolean: BooleanTomato;
+    string: AtomShapedTomato<string>;
+    number: AtomShapedTomato<number>;
+    boolean: AtomShapedTomato<boolean>;
+    any: AtomShapedTomato<any>;
     array: <T extends AnyShapeTomato>(x: T) => ArrayTomato<T>;
     objectOf: <V>(val: V) => RecordTomato<Record<any, V>>;
     object: <V>(val: V) => ObjectTomato<V>;
-    any: AnyTomato;
 }

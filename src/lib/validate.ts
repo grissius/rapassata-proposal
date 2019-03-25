@@ -1,4 +1,4 @@
-import { StringTomato, TomatoShape, AnyShapeTomato, NumberTomato, ArrayTomato, ObjectTomato, BooleanTomato } from './tomatos';
+import { TomatoShape, AnyShapeTomato, ArrayTomato, ObjectTomato, AtomShapedTomato } from './tomatos';
 
 enum FlowType {
     Transform = 'Transform',
@@ -23,8 +23,8 @@ interface ValidationError {
 
 export type FlowItem<T = any, O = any> = TransformElement<T, O> | ValidationElement<T>;
 
-export const string: StringTomato = (() => {
-    let node: StringTomato = {
+const atomNode = <T>() => {
+    let node: AtomShapedTomato<T> = {
         shape: TomatoShape.Atom,
         flow: [],
         required: false,
@@ -35,39 +35,26 @@ export const string: StringTomato = (() => {
         }),
         require: () => ({ ...node, required: true }),
         defaultTo: x => ({ ...node, default: x }),
-    };
+    }
+    return node;
+}
+
+export const string: AtomShapedTomato<string> = (() => {
+    const node = atomNode<string>();
     return node.validate(x => typeof x === 'string', 'Not a string');
 })();
 
-export const number: NumberTomato = (() => {
-    let node: NumberTomato = {
-        shape: TomatoShape.Atom,
-        flow: [],
-        required: false,
-        default: undefined,
-        validate: (validate, message = '') => ({
-            ...node,
-            flow: [...node.flow, { message, validate, type: FlowType.Validate }],
-        }),
-        require: () => ({ ...node, required: true }),
-        defaultTo: x => ({ ...node, default: x }),
-    };
+export const any: AtomShapedTomato<any> = (() => {
+    return atomNode<any>();
+})();
+
+export const number: AtomShapedTomato<number> = (() => {
+    const node = atomNode<number>();
     return node.validate(x => typeof x === 'number', 'Not a number');
 })();
 
-export const boolean: BooleanTomato = (() => {
-    let node: BooleanTomato = {
-        shape: TomatoShape.Atom,
-        flow: [],
-        required: false,
-        default: undefined,
-        validate: (validate, message = '') => ({
-            ...node,
-            flow: [...node.flow, { message, validate, type: FlowType.Validate }],
-        }),
-        require: () => ({ ...node, required: true }),
-        defaultTo: x => ({ ...node, default: x }),
-    };
+export const boolean: AtomShapedTomato<boolean> = (() => {
+    const node = atomNode<boolean>();
     return node.validate(x => typeof x === 'boolean', 'Not a boolean');
 })();
 
@@ -120,9 +107,6 @@ const runFlow = (flow: FlowItem[], value: any) => {
         value,
     };
 };
-
-const mapObject = (obj: any, fn: (key: keyof any, value: any) => any) =>
-    Object.keys(obj).reduce((res, key) => ({...res, [key]: fn(key, obj[key])}), {} as any);
 
 export const validate = (schema: AnyShapeTomato, value: any): any => {
     const flowRes = runFlow(schema.flow, value);
