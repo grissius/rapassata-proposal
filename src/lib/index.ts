@@ -21,9 +21,9 @@ const Nest = object({
         address: object({
             street: string.validate(x => x !== ''),
             number: string.require(),
-        }),
+        }).require(),
         s: string.defaultTo('red'),
-    }).validate(x =>),
+    }),
 });
 type Y = Values<typeof Nest>;
 

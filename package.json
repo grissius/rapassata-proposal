@@ -35,6 +35,7 @@
     "npm-check": "^5.8.0",
     "prettier": "^1.15.3",
     "prettier-config-ackee": "^0.0.13",
+    "resolve-types": "^0.2.0",
     "ts-jest": "^24.0.0",
     "tslint-config-ackee": "^0.3.0",
     "typedoc": "^0.14.2",
