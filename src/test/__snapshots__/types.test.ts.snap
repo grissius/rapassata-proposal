@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Types composite 1`] = `"{ age: number; user: { address: { street: string | undefined; number: string; }; s: string; } | undefined; address: { street: string | undefined; number: string; }; } | undefined"`;

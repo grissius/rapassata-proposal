@@ -1,4 +1,4 @@
-import { TomatoShape, AnyShapeTomato, ArrayTomato, ObjectTomato, AtomShapedTomato } from './tomatos';
+import { AnyShapeTomato, ArrayTomato, AtomShapedTomato, ObjectTomato, TomatoShape } from './tomatos';
 
 enum FlowType {
     Transform = 'Transform',
@@ -23,9 +23,9 @@ interface ValidationError {
 
 export type FlowItem<T = any, O = any> = TransformElement<T, O> | ValidationElement<T>;
 
-const atomNode = <T>() => {
-    let node: AtomShapedTomato<T> = {
-        shape: TomatoShape.Atom,
+const baseNode = <B extends { shape: TomatoShape.Atom }, T>(base: B) => {
+    const node: AtomShapedTomato<T> = {
+        ...base,
         flow: [],
         required: false,
         default: undefined,
@@ -35,9 +35,16 @@ const atomNode = <T>() => {
         }),
         require: () => ({ ...node, required: true }),
         defaultTo: x => ({ ...node, default: x }),
-    }
+    };
     return node;
-}
+};
+
+const atomNode = <T>() => {
+    const node: AtomShapedTomato<T> = baseNode({
+        shape: TomatoShape.Atom,
+    });
+    return node;
+};
 
 export const string: AtomShapedTomato<string> = (() => {
     const node = atomNode<string>();
@@ -59,7 +66,7 @@ export const boolean: AtomShapedTomato<boolean> = (() => {
 })();
 
 export const array = <T extends AnyShapeTomato>(item: T): ArrayTomato<T> => {
-    let node: ArrayTomato<T> = {
+    const node: ArrayTomato<T> = {
         item,
         shape: TomatoShape.Array,
         flow: [],
@@ -75,10 +82,10 @@ export const array = <T extends AnyShapeTomato>(item: T): ArrayTomato<T> => {
     return node.validate(x => Array.isArray(x), 'Not an array');
 };
 
-const isObject = (x: any) => typeof x == 'object' && x && x.constructor == Object
+const isObject = (x: any) => typeof x === 'object' && x && x.constructor === Object;
 
 export const object = <T>(structure: T): ObjectTomato<T> => {
-    let node: ObjectTomato<T> = {
+    const node: ObjectTomato<T> = {
         structure,
         shape: TomatoShape.Object,
         flow: [],
@@ -112,19 +119,22 @@ export const validate = (schema: AnyShapeTomato, value: any): any => {
     const flowRes = runFlow(schema.flow, value);
     if (schema.shape === TomatoShape.Atom) {
         return flowRes;
-    } else if (schema.shape === TomatoShape.Array) {
+    }
+    if (schema.shape === TomatoShape.Array) {
         return {
             ...flowRes,
             children: (Array.isArray(value) ? value : []).map(v => validate(schema.item, v)),
         };
-    } else {
-        value = isObject(value) ? value : {};
-        return {
-            ...flowRes,
-            structure: Object.keys(schema.structure).reduce((res, key) => {
+    }
+    value = isObject(value) ? value : {};
+    return {
+        ...flowRes,
+        structure: Object.keys(schema.structure).reduce(
+            (res, key) => {
                 res[key] = validate(schema.structure[key], value[key]);
                 return res;
-            }, {} as any),
-        };
-    }
+            },
+            {} as any
+        ),
+    };
 };

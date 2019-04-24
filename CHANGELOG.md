@@ -6,25 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.1.0] - 2019-03-15
+## [0.0.0] - 2019-04-24
 ### Added
-- Config and guide for: Travis, Codeclimate, David, Snyk
+- Template based on [package-template v0.1.0](https://github.com/AckeeCZ/package-template/tree/v0.1.0)
+- Basic protocol implementation with working TS types and very basic validation
 
-### Changed
-- Update dependecies
-
-### Removed
-- Coveralls
-
-## [0.0.1] - 2019-03-15
-### Added
-- Changelog
-
-## [0.0.0] - 2018-10-17
-### Added
-- Project template
-
-[Unreleased]: https://github.com/AckeeCZ/desmond/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/AckeeCZ/desmond/compare/v0.0.1...v0.1.0
-[0.0.1]: https://github.com/AckeeCZ/desmond/compare/v0.0.0...v0.0.1
-[0.0.0]: https://github.com/AckeeCZ/desmond/compare/67c5ebd...v0.0.0
+[Unreleased]: https://github.com/grissius/intspector/compare/v0.0.0...HEAD
+[0.0.0]: https://github.com/grissius/intspector/compare/76d2238...v0.0.0
